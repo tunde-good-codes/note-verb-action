@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors"
 import helmet from "helmet"
 import connectDb from "./utils/db";
-import { errorHandler, healthCheck } from "../../../shared/middleware";
+import { corsOptions, errorHandler, healthCheck } from "../../../shared/middleware";
 import router from "./routes/auth.router";
 
 
@@ -18,7 +18,7 @@ connectDb();
 //app.use(errorMiddleware);
 
 app.use(cookieParser());
-app.use(cors())
+app.use(cors(corsOptions()));
 app.use(helmet())
 
 
