@@ -1,18 +1,39 @@
 import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+
 import cookieParser from "cookie-parser";
-//import router from "./routes/auth.router.js";
-//import { errorMiddleware } from "@shared/error-handler/error-middleware.js";
+import cors from "cors"
+import helmet from "helmet"
 import connectDb from "./utils/db";
+import { errorHandler, healthCheck } from "../../../shared/middleware";
+import router from "./routes/auth.router";
+
+
 
 const app = express();
-dotenv.config();
 
 connectDb();
 
 //app.use(errorMiddleware);
 
 app.use(cookieParser());
+app.use(cors())
+app.use(helmet())
+
+
+
+
+// parse JSON bodies
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
+
+// API routes
+app.use("/auth", router);
+app.get("/health", healthCheck);
+
+// Error handling middleware
+app.use(errorHandler);
 // Your routes here
 
 //app.use("/api", router);

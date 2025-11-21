@@ -5,7 +5,7 @@ import { StringValue } from "ms";
 import User from "./models/User";
 import RefreshToken from "./models/RefreshToken";
 import { Types } from "mongoose";
-import { createServiceError } from "@shared/utils";
+import { createServiceError } from "../../../shared/utils";
 
 // Helper function for service errors
 // function createServiceError(
@@ -58,7 +58,10 @@ export class AuthService {
       });
 
       // Generate tokens
-      return this.generateTokens((user._id as Types.ObjectId).toString(), user.email);
+      return this.generateTokens(
+        (user._id as Types.ObjectId).toString(),
+        user.email
+      );
     } catch (error) {
       if (
         error instanceof Error &&
@@ -123,7 +126,10 @@ export class AuthService {
       }
 
       // Generate tokens
-      return this.generateTokens((user._id as Types.ObjectId).toString(), user.email);
+      return this.generateTokens(
+        (user._id as Types.ObjectId).toString(),
+        user.email
+      );
     } catch (error) {
       if (
         error instanceof Error &&
