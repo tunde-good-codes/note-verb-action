@@ -1,24 +1,24 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDb from "./utils/db.js";
 import cookieParser from "cookie-parser";
-import router from "./routes/auth.router.js";
-import { errorMiddleware } from "@shared/error-handler/error-middleware.js";
+//import router from "./routes/auth.router.js";
+//import { errorMiddleware } from "@shared/error-handler/error-middleware.js";
+import connectDb from "./utils/db";
 
 const app = express();
 dotenv.config();
 
 connectDb();
 
-app.use(errorMiddleware);
+//app.use(errorMiddleware);
 
 app.use(cookieParser());
 // Your routes here
 
-app.use("/api", router);
+//app.use("/api", router);
 
 app.get("/api", (req, res) => {
-  res.send({ message: "Welcome to auth-service!" });
+  res.send({ message: "Welcome to auth-service!!" });
 });
 
 
@@ -39,7 +39,7 @@ app.get("/", (req, res) => {
   });
 });
 // Error middleware MUST be last
-app.use(errorMiddleware);
+//app.use(errorMiddleware);
 
 const PORT = process.env.AUTH_SERVICE_PORT || 8081;
 const server = app.listen(PORT, () => {
