@@ -1,73 +1,93 @@
-import type { Request, Response, NextFunction } from "express";
+import { AuthService } from "@/authService";
+import { asyncHandler } from "@shared/middleware";
+import { createErrorResponse, createSuccessResponse } from "@shared/utils";
+import { Request, Response } from "express";
 
-import bcrypt from "bcryptjs";
-import {
-  checkOtpRestrictions,
-  sendOtp,
-  trackOtpRequests,
-  validateRegistrationData,
-  verifyOtp,
-} from "../utils/auth.helper.js";
-import prisma from "@shared/prisma/index.js";
-import { ValidationError } from "@shared/error-handler/index.js";
-import User from "../models/User.js";
+const authService = new AuthService();
 
-export const userRegistration = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    validateRegistrationData(req.body, "user");
+export const register = asyncHandler(async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  const tokens = await authService.register(email, password);
 
-    const { name, email } = req.body;
+  res
+    .status(201)
+    .json(createSuccessResponse(tokens, "User registered successfully"));
+});
 
-    const existingUser = await User.findOne({ email });
+export const login = asyncHandler(async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  const tokens = await authService.login(email, password);
 
-    if (existingUser) {
-      throw next(new ValidationError("user already exists with this email"));
-    }
+  res
+    .status(200)
+    .json(createSuccessResponse(tokens, "User logged in successfully"));
+});
 
-    await checkOtpRestrictions(email, next);
-    await trackOtpRequests(email, next);
-    await sendOtp(name, email, "user-activation-mail");
-    res.status(200).json({
-      message: "otp sent to email. please verify your account",
-    });
-  } catch (e) {
-    console.log(e);
+export const refreshTokens = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { refreshToken } = req.body;
+    const tokens = await authService.refreshToken(refreshToken);
+
+    res
+      .status(200)
+      .json(createSuccessResponse(tokens, "Tokens refreshed successfully"));
   }
-};
+);
 
-export const verifyUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { name, email, password, otp } = req.body;
-    if (!name || !email || !password || !otp) {
-      return next(new ValidationError("All fields are required"));
+export const logout = asyncHandler(async (req: Request, res: Response) => {
+  const { refreshToken } = req.body;
+  await authService.logout(refreshToken);
+
+  res
+    .status(200)
+    .json(createSuccessResponse(null, "User logged out successfully"));
+});
+
+export const validateToken = asyncHandler(
+  async (req: Request, res: Response) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json(createErrorResponse("No token provided"));
     }
-    const existingUser = await User.findOne({ email });
 
-    if (existingUser) {
-      throw next(new ValidationError("user already exists with this email"));
-    }
-    await verifyOtp(email, otp, next);
+    const payload = await authService.validateToken(token);
 
-    const hashPassword = await bcrypt.hash(password, 10);
-    await User.create({
-      name,
-      email,
-      password: hashPassword,
-    });
-
-    res.status(201).json({
-      message: "user registered successfully",
-      success: true,
-    });
-  } catch (e) {
-    return next(e);
+    res.status(200).json(createSuccessResponse(payload, "Token is valid"));
   }
-};
+);
+
+// export const getProfile = asyncHandler(async (req: Request, res: Response) => {
+//   const userId = req.user?.userId;
+
+//   if (!userId) {
+//     return res.status(401).json(createErrorResponse("Unauthorized"));
+//   }
+
+//   const user = await authService.getUserById(userId);
+
+//   if (!user) {
+//     return res.status(404).json(createErrorResponse("User not found"));
+//   }
+
+//   return res
+//     .status(200)
+//     .json(createSuccessResponse(user, "User profile retrieved"));
+// });
+
+// export const deleteAccount = asyncHandler(
+//   async (req: Request, res: Response) => {
+//     const userId = req.user?.userId;
+
+//     if (!userId) {
+//       return res.status(401).json(createErrorResponse("Unauthorized"));
+//     }
+
+//     await authService.deleteUser(userId);
+
+//     return res
+//       .status(200)
+//       .json(createSuccessResponse(null, "Account deleted successfully"));
+//   }
+// );
