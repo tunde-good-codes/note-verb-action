@@ -26,6 +26,13 @@ app.use(express.urlencoded({ extended: true }));
 // API routes
 app.use("/users", usersRoutes);
 app.get("/health", healthCheck);
+// Keep your existing root endpoint
+app.get("/", (req, res) => {
+  res.json({
+    message: "user-service is here",
+    success: true,
+  });
+});
 
 // Error handling middleware
 app.use(errorHandler);

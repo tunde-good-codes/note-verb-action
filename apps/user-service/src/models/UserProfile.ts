@@ -55,7 +55,6 @@ const userProfileSchema = new Schema<IUserProfile>({
     createdAt: 'created_at',
     updatedAt: 'updated_at'
   },
-  collection: 'user_profiles'
 });
 
 // Indexes
