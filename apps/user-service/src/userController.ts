@@ -28,7 +28,7 @@ export const updateProfile = asyncHandler(
     if (!userId) {
       return res
         .status(401)
-        .json(createErrorResponse("User not authenticated"));
+        .json(createErrorResponse("User currently not authenticated"));
     }
 
     const profile = await userService.updateProfile(userId, req.body);
