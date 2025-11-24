@@ -78,7 +78,7 @@ export function gatewayAuth(req: Request, res: Response, next: NextFunction) {
 }
 
 /**
- * Optional Authentication Middleware
+ * Optional Authentication Middleware that can be considered
  * Adds user to request if token is valid, but doesn't require it
  */
 export function optionalAuth(req: Request, res: Response, next: NextFunction) {

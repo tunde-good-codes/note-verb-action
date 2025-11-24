@@ -17,7 +17,7 @@ export const getProfile = asyncHandler(async (req: Request, res: Response) => {
   return res
     .status(200)
     .json(
-      createSuccessResponse(profile, "User profile retrieved successfully")
+      createSuccessResponse(profile, "User profile retrieved successfully. Confirmed Okay!")
     );
 });
 
