@@ -2,22 +2,20 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
-import usersRoutes from "./routes";
+import notesRoutes from "./routes";
 import {
   corsOptions,
   errorHandler,
   healthCheck,
 } from "../../../shared/middleware";
-import connectDb from "./utils/db";
+import connectDb from "./database";
 
 //load environment variables
 dotenv.config();
 
 const app = express();
-
 connectDb();
-
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3003;
 
 // setup middlewares
 app.use(cors(corsOptions()));
@@ -28,15 +26,8 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // API routes
-app.use("/users", usersRoutes);
+app.use("/notes", notesRoutes);
 app.get("/health", healthCheck);
-// Keep your existing root endpoint
-app.get("/", (req, res) => {
-  res.json({
-    message: "user-service is here",
-    success: true,
-  });
-});
 
 // Error handling middleware
 app.use(errorHandler);

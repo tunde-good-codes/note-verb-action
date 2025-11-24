@@ -3,11 +3,12 @@ import { JWTPayload, logError, ServiceError } from "../types";
 import { createErrorResponse } from "../utils";
 import jwt from "jsonwebtoken";
 
-// Extends express request interface to include custom properties
+
+// extends express request interface to include custom properties
 declare global {
   namespace Express {
     interface Request {
-      user?: JWTPayload;
+      user?: any;
     }
   }
 }
