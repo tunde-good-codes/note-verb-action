@@ -36,12 +36,13 @@ export interface Note {
   updatedAt: Date;
   tags?: Tag[];
 }
-
+// shared/types.ts
 export interface Tag {
-  id: string;
+  id: string; // This will be the MongoDB ObjectId as string
   name: string;
   color?: string;
   userId: string;
+  createdAt: Date;
   updatedAt: Date;
 }
 
