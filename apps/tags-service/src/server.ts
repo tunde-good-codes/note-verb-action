@@ -8,7 +8,7 @@ import {
   errorHandler,
   healthCheck,
 } from "../../../shared/middleware";
-import { connectDb } from "./database";
+import connectDb from "./database";
 
 //load environment variables
 dotenv.config();
