@@ -44,7 +44,12 @@ app.use(gatewayAuth);
 
 // setup proxy routes
 app.use(proxyRoutes);
-
+app.get("/", (req,res)=>{
+  res.send({success:true, message:"got it!"})
+})
+app.get("/health", (req,res)=>{
+  res.send({success:true, message:"health got it!"})
+})
 //Gloval error handler
 app.use(
   (
@@ -77,6 +82,9 @@ const server = app.listen(PORT, () => {
   console.log(`   Tags Service:  http://localhost:${PORT}/api/tags/*`);
   console.log("");
 });
+
+server.on("error", console.error);
+
 
 // Graceful shutdown
 process.on("SIGINT", () => {

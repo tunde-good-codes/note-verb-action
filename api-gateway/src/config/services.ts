@@ -13,28 +13,28 @@ export interface ServicesConfig {
 export const servicesConfig: ServicesConfig = {
   auth: {
     name: "Auth Service",
-    url: process.env.AUTH_SERVICE_URL || "http://localhost:3001",
+    url: process.env.AUTH_SERVICE_URL || "http://localhost:8081",
     healthPath: "/health",
     timeout: 5000,
     retries: 3,
   },
   users: {
     name: "Users Service",
-    url: process.env.USER_SERVICE_URL || "http://localhost:3002",
+    url: process.env.USER_SERVICE_URL || "http://localhost:8082",
     healthPath: "/health",
     timeout: 5000,
     retries: 3,
   },
   notes: {
     name: "Notes Service",
-    url: process.env.NOTES_SERVICE_URL || "http://localhost:3003",
+    url: process.env.NOTES_SERVICE_URL || "http://localhost:8083",
     healthPath: "/health",
     timeout: 5000,
     retries: 3,
   },
   tags: {
     name: "Tags Service",
-    url: process.env.TAGS_SERVICE_URL || "http://localhost:3004",
+    url: process.env.TAGS_SERVICE_URL || "http://localhost:8084",
     healthPath: "/health",
     timeout: 5000,
     retries: 3,
